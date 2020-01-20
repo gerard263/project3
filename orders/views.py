@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 # Create your views here.
@@ -31,4 +32,9 @@ def register(request):
     username = request.POST["username"]
     password = request.POST["password"]
     email = request.POST["email"]
-    
+    firstname = request.POST["firstname"]
+    lastname = request.POST["lastname"]
+    user = User.objects.create_user(username, email, password)
+    user.first_name = firstname
+    user.last_name = lastname
+    user.save()
