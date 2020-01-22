@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 # Create your views here.
 def index(request):
-    if not request.user.is_authenticated:
+    if not request.user_is_authenticated:
         return render(request, "orders/login.html", {"message": None})
     context = {
         "user": request.user
@@ -38,4 +38,3 @@ def register(request):
     user.first_name = firstname
     user.last_name = lastname
     user.save()
-    return render(request, "orders/registered.html", {"username": username})

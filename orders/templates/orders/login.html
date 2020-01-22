@@ -1,0 +1,12 @@
+{% extends "orders/base.html" %}
+{% block body %}
+<h1>login</h1>
+{% if message %}
+<div class="errormessage">
+    {{ message }} 
+</div>
+{% endif %}
+<hr>
+username: <input type="text" name="username">
+password: <input type="password" name="password">
+{% endblock %}

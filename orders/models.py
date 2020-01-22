@@ -10,10 +10,10 @@ class Category(models.Model):
 
 
 class Orderitem(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="orders")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="orderitems")
 
 class Order(models.Model):
-    orderitems = models.ManyToManyField(Orderitem, blank=True, related_name="orders")
+    orderitems = models.ManyToManyField(Orderitem, blank=True, related_name="orderitems")
     totalamount = models.IntegerField()
 
 class Pizzatype(models.Model):
