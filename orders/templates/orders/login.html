@@ -7,6 +7,12 @@
 </div>
 {% endif %}
 <hr>
-username: <input type="text" name="username">
-password: <input type="password" name="password">
+<form action="{% url 'login' %}" method="POST">
+    {% csrf_token %}
+    username: <input type="text" name="username">
+    password: <input type="password" name="password">
+    <input type="submit">    
+</form>
+<hr>
+No account yet? <a href="{% url 'register' %}">Register</a>
 {% endblock %}

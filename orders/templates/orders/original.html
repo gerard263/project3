@@ -1,15 +1,31 @@
-{% extends "orders/base.html" %}
-{% block body %}
-welcome, {{ user.username }}
-{% if sizes %}
-  {% for size in sizes %}
-    {{ size }}
-  {% endfor %}
-{% endif %}
-<a href="{% url 'logout' %}">Log out</a>
 
-<div id="main">
-<table width="100%">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<title>Pinochio's Pizza &amp; Subs:  Menu</title>
+<meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
+<link rel="stylesheet" type="text/css" href="site.css" />
+</head>
+<body>
+<div id="header">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td class="green" width="20%">&nbsp;</td>
+<td width="60%">
+<img height="140" src="images/pinocchio_72.gif" alt="Pinocchio"/>
+ <h1>Pinocchio's Pizza &amp; Subs</h1>
+ <h2>74 Winthrop Street<br />
+ Harvard Square<br />
+ 617-876-4897</h2>
+</td>
+<td class="red" width="20%">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div><div id="menu"><ul><li><a href="index.html" id="">Home</a></li><li><a href="menu.html" id="youarehere">Menu</a></li><li><a href="directions.html" id="">Directions</a></li><li><a href="hours.html"  id="">Hours</a></li><li><a href="sicilian_vs_regular.html"  id="">Sicilian vs. Regular</a></li><li><a href="contact.html"  id="">Contact Us</a></li></ul></div><div id="main"><table width="100%">
 <tbody>
 <tr>
 <td width="50%">
@@ -29,13 +45,8 @@ welcome, {{ user.username }}
    </tr>
    <tr>
  <td></td>
- {% if sizes %}
-  {% for size in sizes %}
-    <td>{{ size }}</td>
-  {% endfor %}
-{% endif %}
- <!-- <td>Small</td>
- <td>Large</td> -->
+ <td>Small</td>
+ <td>Large</td>
    </tr>	      <tr>
  <td width="50%">Cheese</td>
  <td width="25%">12.70</td>
@@ -103,26 +114,49 @@ welcome, {{ user.username }}
 <a href="#pasta">Pasta</a> |
 <a href="#salad">Salad</a> |
 <a href="#dinner">Dinner Platters</a> 
-</div>	  
-<table width="100%" class="toppingmenu">
-  <tbody>
-    <tr>
-      <th colspan="2"><a name="toppings">Toppings</a></th>
-    </tr>	      
-    <tr>    
-      <td width="50%">
-        <!--<select multiple="multiple" name="sel" size="5">-->
-        <ul>
-          {% for topping in toppings %}
-          
-            <li><label for="{{topping}}"><input type="checkbox" name="{{topping}}" id="{{topping}}">{{topping}}</label></li>
-              <!--<option value="{{ topping }}">{{topping}}</option>-->
-          {% endfor %}
-        </ul>
-        <!--</select>-->
-      </td>
-    </tr>	      	    
-  </tbody>
+</div>	  <table width="100%" class="toppingmenu">
+ <tbody>
+   <tr>
+ <th colspan="2"><a name="toppings">Toppings</a></th>
+   </tr>	      <tr>
+ <td width="50%">Pepperoni</td>
+   </tr>	      <tr>
+ <td width="50%">Sausage</td>
+              </tr>	      <tr>
+ <td width="50%">Mushrooms</td>
+              </tr>	      <tr>
+ <td width="50%">Onions</td>
+   </tr>	      <tr>
+ <td width="50%">Ham</td>
+   </tr>	      <tr>
+ <td width="50%">Canadian Bacon</td>
+   </tr>	      <tr>
+ <td width="50%">Pineapple</td>
+   </tr>	      <tr>
+ <td width="50%">Eggplant</td>
+   </tr>	      <tr>
+ <td width="50%">Tomato &amp; Basil</td>
+   </tr>	      <tr>
+ <td width="50%">Green Peppers</td>
+   </tr>	      <tr>
+ <td width="50%">Hamburger</td>
+   </tr>	      <tr>
+ <td width="50%">Spinach</td>
+   </tr>	      <tr>
+ <td width="50%">Artichoke</td>
+              </tr>	      <tr>
+ <td width="50%">Buffalo Chicken</td>
+               </tr>	      <tr>
+ <td width="50%">Barbecue Chicken</td>
+   </tr>	      <tr>
+ <td width="50%">Anchovies</td>
+   </tr>	      <tr>
+ <td width="50%">Black Olives</td>
+   </tr>	      <tr>
+ <td width="50%">Fresh Garlic</td>
+   </tr>	      <tr>
+ <td width="50%">Zucchini</td>
+   </tr>	    </tbody>
 </table><div class="internalmenunav">
 <a href="#regular_pizza">Regular Pizza</a> |
 <a href="#sicilian_pizza">Sicilian Pizza</a> |
@@ -318,34 +352,10 @@ welcome, {{ user.username }}
 </div>	</div>
 </td>
 
-<td> 
-  <div class="callout">
-    <h2>Order</h2><div class="internalmenunav">
-    <a href="#regular_pizza">Regular Pizza</a> |
-    <a href="#sicilian_pizza">Sicilian Pizza</a> |
-    <a href="#toppings">Toppings</a> |
-    <a href="#subs">Subs</a> |
-    <a href="#pasta">Pasta</a> |
-    <a href="#salad">Salad</a> |
-    <a href="#dinner">Dinner Platters</a> 
-    </div>	<table width="100%" class="foodmenu">
-     <tbody>
-       <tr>
-     <th colspan="4">What would you like to order?</th>
-     
-       </tr>
-       <td>
-      <form>
-        <select>
-          {% for category in categories %}
-            <option value="{{ category }}" class="categoryoption" data-category="{{ category }}">{{ category }}</option>
-          {% endfor %}
-        </select>
-      </form>
-     </td>
+<td>
 </td>
 </tr>
 </tbody>
-</table>
-</div>
-{% endblock %}
+</table></div>
+</body>
+</html>
