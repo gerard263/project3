@@ -9,17 +9,9 @@
     <meta name="generator" content="amaya 9.1, see http://www.w3.org/Amaya/" />
     <link rel="stylesheet" type="text/css" href="{% static 'orders/site.css' %}" />
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {        
-        $('input[type=checkbox]').on('change', function (e) {            
-          if ($('input[type=checkbox]:checked').length > 5) {
-              $(this).prop('checked', false);
-              alert("allowed only 5");
-          }
-      });
-      
-      });
-      </script>
+    
+      {% block head %}
+      {% endblock %}
 
     </head>
     <body>

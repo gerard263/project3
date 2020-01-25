@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Size, Topping, Category
+from .models import Size, Topping, Category, Pizzatype, Pastaprice, Saladprice, Dinnerplattername
 
 # Create your views here.
 def index(request):
@@ -13,7 +13,10 @@ def index(request):
         "user": request.user,
         "sizes": Size.objects.all(),
         "toppings": Topping.objects.all(),
-        "categories": Category.objects.all()
+        "categories": Category.objects.all(),
+        "pizzatypes": Pizzatype.objects.all(),
+        "pastas": Pastaprice.objects.all(),
+        "salads": Saladprice.objects.all()
     }
     return render(request, "orders/index.html", context)
 
@@ -48,3 +51,11 @@ def register(request):
         return render(request, "orders/login.html", {"message": "Successfully registered " + username})
         #except:
             #return render(request, "orders/register.html", {"message": "Something went wrong with registering"})
+
+def addtocart(request):
+    #form = ProfileForm(request.POST, instance=request.user)
+    #data = request.POST.copy()
+    #category = request.POST["categoryName"]
+    print('hoi')
+    print(request.POST)
+    return render(request, "orders/register.html", {"message": None})

@@ -1,11 +1,125 @@
 {% extends "orders/base.html" %}
+
+{% block head %}  
+  <script>
+    function categoryChange() {
+        var category = document.getElementById("categorySelect").value;
+        if (category === 'Pizza') {
+            showsizes();
+            showpizzatypes();
+            showtoppings();
+        }
+        else if (category === 'Pasta') {
+          showpastas();
+          document.getElementById("seconddiv").innerHTML = '';
+          document.getElementById("thirddiv").innerHTML = '';
+        }
+        else if (category === 'Sub') {
+            showsizes();
+
+        }
+        else if (category === 'Salad') {
+          showsalads();
+          document.getElementById("seconddiv").innerHTML = '';
+          document.getElementById("thirddiv").innerHTML = '';
+        }
+        else if (category === 'Dinner Platter') {
+          showsizes();
+          showdinnerplatter();
+          document.getElementById("thirddiv").innerHTML = '';
+        }
+        //alert(`${category}`);
+    };
+    function showdinnerplatter() {
+      var dinnerplatterhtml = ` <h3> Dinner Platter <h3> 
+      <select form="addtocartform" name="firstdiv">
+          {% for pasta in pastas %}
+            <option value="{{ pasta }}">{{ pasta }}</option>
+          {% endfor %}
+        </select>`;
+        document.getElementById("firstdiv").innerHTML = pastashtml;
+    };
+    function showpastas() {
+    var pastashtml = ` <h3> Pasta <h3> 
+      <select form="addtocartform" name="firstdiv">
+          {% for pasta in pastas %}
+            <option value="{{ pasta }}">{{ pasta }}</option>
+          {% endfor %}
+        </select>`;
+        document.getElementById("firstdiv").innerHTML = pastashtml;
+    };
+    function showsalads() {
+    var saladshtml = ` <h3> Salad <h3> 
+      <select form="addtocartform" name="firstdiv">
+          {% for salad in salads %}
+            <option value="{{ salad }}">{{ salad }}</option>
+          {% endfor %}
+        </select>`;
+        document.getElementById("firstdiv").innerHTML = saladshtml;
+    };
+
+    function showsizes() {
+      var sizeshtml = ` <h3> Size <h3> 
+      <select form="addtocartform" name="size">
+          {% for size in sizes %}
+            <option value="{{ size }}">{{ size }}</option>
+          {% endfor %}
+        </select>`;
+        document.getElementById("firstdiv").innerHTML = sizeshtml;
+        //alert(`${sizeshtml}`);
+    };
+    function showpizzatypes() {      
+      var pizzatypeshtml = ` <h3> Pizza Type <h3> 
+      <select id="pizzatypeSelect" name="type" form="addtocartform">
+          {% for pizzatype in pizzatypes %}
+            <option value="{{ pizzatype }}">{{ pizzatype }}</option>
+          {% endfor %}
+        </select>`;
+        document.getElementById("seconddiv").innerHTML = pizzatypeshtml;
+        //alert(`${pizzatypeshtml}`);
+    };
+    function showtoppings() {      
+      var toppingshtml = ` <h3> Toppings <h3> 
+        <ul>
+          {% for topping in toppings %}
+            
+            <li><label for="{{topping}}"><input type="checkbox" name="toppings" id="{{topping}}" form="addtocartform" value="{{ topping }}"">{{topping}}</label></li>
+            
+          {% endfor %}
+        </center>  `;
+        document.getElementById("thirddiv").innerHTML = toppingshtml;
+        //alert(`${pizzatypeshtml}`);
+    };    
+
+    function addToCart() {
+      const request = new XMLHttpRequest();
+                request.open('POST', '/sendchatmessage');                               
+
+                // Add start and end points to request data.
+                const data = new FormData();
+                data.append('displayname', localStorage.getItem('displayname'));
+                data.append('currentchannel', localStorage.getItem("currentchannel"));                
+                data.append('chattext', document.querySelector('#chattext').value);
+                
+                // Send request.
+                request.send(data);
+                document.querySelector('#chattext').value = '';
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {        
+    $('input[type=checkbox]').on('change', function (e) {            
+      if ($('input[type=checkbox]:checked').length > 5) {
+          $(this).prop('checked', false);
+          alert("allowed only 5");
+        }
+      });         
+    });
+  </script>
+{% endblock %}
+
 {% block body %}
 welcome, {{ user.username }}
-{% if sizes %}
-  {% for size in sizes %}
-    {{ size }}
-  {% endfor %}
-{% endif %}
+
 <a href="{% url 'logout' %}">Log out</a>
 
 <div id="main">
@@ -109,21 +223,17 @@ welcome, {{ user.username }}
     <tr>
       <th colspan="2"><a name="toppings">Toppings</a></th>
     </tr>	      
-    <tr>    
-      <td width="50%">
-        <!--<select multiple="multiple" name="sel" size="5">-->
-        <ul>
-          {% for topping in toppings %}
-          
-            <li><label for="{{topping}}"><input type="checkbox" name="{{topping}}" id="{{topping}}">{{topping}}</label></li>
-              <!--<option value="{{ topping }}">{{topping}}</option>-->
-          {% endfor %}
-        </ul>
-        <!--</select>-->
-      </td>
-    </tr>	      	    
+       
+      {% for topping in toppings %}
+        <tr> 
+          <td width="50%">
+            {{topping}}
+          </td>
+        </tr>
+      {% endfor %}	      	    
   </tbody>
-</table><div class="internalmenunav">
+</table>
+<div class="internalmenunav">
 <a href="#regular_pizza">Regular Pizza</a> |
 <a href="#sicilian_pizza">Sicilian Pizza</a> |
 <a href="#toppings">Toppings</a> |
@@ -320,29 +430,34 @@ welcome, {{ user.username }}
 
 <td> 
   <div class="callout">
-    <h2>Order</h2><div class="internalmenunav">
-    <a href="#regular_pizza">Regular Pizza</a> |
-    <a href="#sicilian_pizza">Sicilian Pizza</a> |
-    <a href="#toppings">Toppings</a> |
-    <a href="#subs">Subs</a> |
-    <a href="#pasta">Pasta</a> |
-    <a href="#salad">Salad</a> |
-    <a href="#dinner">Dinner Platters</a> 
-    </div>	<table width="100%" class="foodmenu">
-     <tbody>
-       <tr>
-     <th colspan="4">What would you like to order?</th>
-     
-       </tr>
-       <td>
-      <form>
-        <select>
+    <h2>Order</h2>	<HR> 
+      
+      <h2> What would you like to order?</h2><BR>
+      
+      <h2>  <select name="categoryName" id="categorySelect" onchange="categoryChange()" form="addtocartform">
+          <option value="nothing" class="categoryoption""></option>
           {% for category in categories %}
-            <option value="{{ category }}" class="categoryoption" data-category="{{ category }}">{{ category }}</option>
+            <option value="{{ category }}" class="categoryoption"">{{ category }}</option>
           {% endfor %}
         </select>
-      </form>
-     </td>
+        <BR></h2>
+        
+          <div id="firstdiv">
+
+            </div>
+            <div id="seconddiv">
+
+            </div>
+            <div id="thirddiv">
+
+            </div>
+            <form action="{% url 'addtocart' %}" method="POST" id="addtocartform">
+              {% csrf_token %}
+            <input type="submit">add to cart</input>
+        </form>
+
+     
+  </div>
 </td>
 </tr>
 </tbody>
