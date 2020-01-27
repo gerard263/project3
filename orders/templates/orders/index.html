@@ -15,8 +15,9 @@
           document.getElementById("thirddiv").innerHTML = '';
         }
         else if (category === 'Sub') {
-            showsizes();
-
+          showsizes();
+          showsubs();
+          document.getElementById("thirddiv").innerHTML = '';
         }
         else if (category === 'Salad') {
           showsalads();
@@ -25,19 +26,53 @@
         }
         else if (category === 'Dinner Platter') {
           showsizes();
-          showdinnerplatter();
+          showdinnerplatters();
           document.getElementById("thirddiv").innerHTML = '';
         }
         //alert(`${category}`);
     };
-    function showdinnerplatter() {
-      var dinnerplatterhtml = ` <h3> Dinner Platter <h3> 
-      <select form="addtocartform" name="firstdiv">
-          {% for pasta in pastas %}
-            <option value="{{ pasta }}">{{ pasta }}</option>
+
+    function showsubs() {
+      var subhtml;
+      if (document.getElementById("selectsizes").value === 'Small') {
+        subhtml = ` <h3> Sub <h3> 
+      <select form="addtocartform" name="seconddiv">
+          {% for smallsub in smallsubs %}
+            <option value="{{ smallsub }}">{{ smallsub }}</option>
           {% endfor %}
         </select>`;
-        document.getElementById("firstdiv").innerHTML = pastashtml;
+      }
+      else {
+        subhtml = ` <h3> Sub <h3> 
+      <select form="addtocartform" name="seconddiv">
+          {% for largesub in largesubs %}
+            <option value="{{ largesub }}">{{ largesub }}</option>
+          {% endfor %}
+        </select>`;
+      }
+        document.getElementById("seconddiv").innerHTML = subhtml;
+    };
+
+
+    function showdinnerplatters() {
+      var dinnerplatterhtml;
+      if (document.getElementById("selectsizes").value === 'Small') {
+        dinnerplatterhtml = ` <h3> Dinner Platter <h3> 
+      <select form="addtocartform" name="seconddiv">
+          {% for smalldinnerplatter in smalldinnerplatters %}
+            <option value="{{ smalldinnerplatter }}">{{ smalldinnerplatter }}</option>
+          {% endfor %}
+        </select>`;
+      }
+      else {
+        dinnerplatterhtml = ` <h3> Dinner Platter <h3> 
+      <select form="addtocartform" name="seconddiv">
+          {% for largedinnerplatter in largedinnerplatters %}
+            <option value="{{ largedinnerplatter }}">{{ largedinnerplatter }}</option>
+          {% endfor %}
+        </select>`;
+      }
+        document.getElementById("seconddiv").innerHTML = dinnerplatterhtml;
     };
     function showpastas() {
     var pastashtml = ` <h3> Pasta <h3> 
@@ -60,7 +95,7 @@
 
     function showsizes() {
       var sizeshtml = ` <h3> Size <h3> 
-      <select form="addtocartform" name="size">
+      <select id="selectsizes" form="addtocartform" name="firstdiv" onchange="sizeChange()">
           {% for size in sizes %}
             <option value="{{ size }}">{{ size }}</option>
           {% endfor %}
@@ -68,9 +103,20 @@
         document.getElementById("firstdiv").innerHTML = sizeshtml;
         //alert(`${sizeshtml}`);
     };
+    function sizeChange() {
+      var category = document.getElementById("categorySelect").value;
+      if (category === 'Dinner Platter') {
+        showdinnerplatters();
+      }
+      else if (category === 'Sub') {
+        showsubs();
+      }
+    };
+
+
     function showpizzatypes() {      
       var pizzatypeshtml = ` <h3> Pizza Type <h3> 
-      <select id="pizzatypeSelect" name="type" form="addtocartform">
+      <select name="seconddiv" form="addtocartform">
           {% for pizzatype in pizzatypes %}
             <option value="{{ pizzatype }}">{{ pizzatype }}</option>
           {% endfor %}
@@ -83,7 +129,7 @@
         <ul>
           {% for topping in toppings %}
             
-            <li><label for="{{topping}}"><input type="checkbox" name="toppings" id="{{topping}}" form="addtocartform" value="{{ topping }}"">{{topping}}</label></li>
+            <li><label for="{{topping}}"><input type="checkbox" name="thirddiv" id="{{topping}}" form="addtocartform" value="{{ topping }}"">{{topping}}</label></li>
             
           {% endfor %}
         </center>  `;
@@ -451,9 +497,10 @@ welcome, {{ user.username }}
             <div id="thirddiv">
 
             </div>
+            <BR>
             <form action="{% url 'addtocart' %}" method="POST" id="addtocartform">
               {% csrf_token %}
-            <input type="submit">add to cart</input>
+            <input type="submit" value="add to cart">
         </form>
 
      

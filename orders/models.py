@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
@@ -9,12 +10,28 @@ class Category(models.Model):
         return f"{self.name}"
 
 
+class Order(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, related_name="orders")
+    totalamount = models.DecimalField(default=0, max_digits=7, decimal_places=2)
+    placed = models.BooleanField(default=False)
+    done = models.BooleanField(default=False)
+
+    def __str__(self):
+        orderitems = Orderitem.objects.filter(order=self.id)
+        #returnstr = ""
+        #for orderitem in orderitems:
+        #    returnstr += str(orderitem) + " \n"
+        #pizzas = Pizza.objects.filter(order=self.id)
+        returnstr = "order for " + str(self.user.username) + ": " + str(len(orderitems)) + " items, total = $ " + str(self.totalamount)
+        #for pizza in pizzas:
+        #    returnstr += str(pizza) + " \n"
+        return returnstr
+
+
 class Orderitem(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="orderitems")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, related_name="orderitems")
 
-class Order(models.Model):
-    orderitems = models.ManyToManyField(Orderitem, blank=True, related_name="orderitems")
-    totalamount = models.IntegerField()
 
 class Pizzatype(models.Model):
     name = models.CharField(max_length=64)
@@ -40,7 +57,11 @@ class Pizza(Orderitem):
     toppings = models.ManyToManyField(Topping, blank=True, related_name="pizzas")
 
     def __str__(self):
-        return f"{self.pizzatype} {self.pizzasize}"
+        toppingsself = self.toppings.all()        
+        returnstr = ""
+        for toppingself in toppingsself:
+            returnstr += " " + str(toppingself)
+        return f"{self.pizzatype} {self.pizzasize} {returnstr}"
 
 class Maxtopping(models.Model):
     name = models.CharField(max_length=64)
@@ -93,13 +114,13 @@ class Subprice(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f"{self.subname} {self.subsize} ${self.price}"
+        return f"Sub {self.subname} {self.subsize} ${self.price}"
         
 class Dinnerplattername(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"Dinner Platter {self.name}"
 
 class Dinnerplatterprice(models.Model):
     name = models.ForeignKey(Dinnerplattername, on_delete=models.CASCADE, related_name="dinnerplatters")
@@ -107,4 +128,4 @@ class Dinnerplatterprice(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f"{self.name} {self.size}"
+        return f"{self.name} {self.size} ${self.price}"

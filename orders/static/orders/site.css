@@ -2,7 +2,7 @@
  /* red #be0027 */
 
  html, body { background-color: white;}
- #main {background-color: #239346; background-image url(images/pinocchio_216.gif); padding: 0; margin: 0;}
+ #main {background-color: #239346; background-image: url(images/pinocchio_216.gif); padding: 0; margin: 0;}
  h1,h2 {text-align: center; font-family: Verdana,Arial,Helvetica,sans-serif; margin: 0;}
  h1 {margin-bottom: 0.5em; margin-top: 0.5em;}
  .green { background-color: #239346; }
@@ -57,4 +57,4 @@
  table.hours td {text-align: left;}
  div.internalmenunav { text-align: center; font-size: 64%; margin-top: 1em; margin-bottom: 1em; background-color: #cccccc;}
 
- #sizesid, #pizzatypeid, #toppingsid {margin: 20px ; }
+ #sizesid, #pizzatypeid, #toppingsid {margin: 20px; }

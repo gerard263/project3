@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Size, Topping, Category, Pizzatype, Pastaprice, Saladprice, Dinnerplattername
+from .models import Size, Topping, Category, Pizzatype, Pastaprice, Saladprice, Dinnerplattername, Dinnerplatterprice, Subname, Subprice, Order, Orderitem, Pizza
 
 # Create your views here.
 def index(request):
@@ -16,7 +16,11 @@ def index(request):
         "categories": Category.objects.all(),
         "pizzatypes": Pizzatype.objects.all(),
         "pastas": Pastaprice.objects.all(),
-        "salads": Saladprice.objects.all()
+        "salads": Saladprice.objects.all(),
+        "smalldinnerplatters": Dinnerplatterprice.objects.filter(size__name__exact="Small"),
+        "largedinnerplatters": Dinnerplatterprice.objects.filter(size__name__exact="Large"),
+        "smallsubs": Subprice.objects.filter(subsize__name__exact="Small"),
+        "largesubs": Subprice.objects.filter(subsize__name__exact="Large")
     }
     return render(request, "orders/index.html", context)
 
@@ -53,9 +57,58 @@ def register(request):
             #return render(request, "orders/register.html", {"message": "Something went wrong with registering"})
 
 def addtocart(request):
-    #form = ProfileForm(request.POST, instance=request.user)
-    #data = request.POST.copy()
+    order = Order.objects.filter(user__username__exact=request.user.username).first()
+    if order:
+        print('order found', order)
+    else:
+        print('no order found')
+        order = Order(user=request.user)
+        print(order)
+        order.save()
+    
     #category = request.POST["categoryName"]
-    print('hoi')
+    if request.POST["categoryName"] == 'Pizza':
+        category = Category.objects.filter(name__exact=request.POST["categoryName"]).first()
+        size = Size.objects.filter(name__exact=request.POST["firstdiv"]).first()
+        pizzatype = Pizzatype.objects.filter(name__exact=request.POST["seconddiv"]).first()
+        toppings = request.POST.getlist('thirddiv')
+        #print(size, pizzatype, toppings)
+        #categoryobject = Category(name=request.POST["categoryName"])
+        pizza = Pizza(category=category, order=order, pizzasize=size, pizzatype=pizzatype)  
+        pizza.save()
+        for topping in toppings:
+            toppingobj = Topping.objects.filter(name__exact=topping).first()
+            pizza.toppings.add(toppingobj)
+        #pizza.save()
+        print("Pizza ordered")
+        print("size = ", size)
+        print("pizzatype = ", pizzatype)
+        #print("toppings = ", toppings)
+        
+    elif category == 'Pasta':
+        pasta = request.POST["firstdiv"]
+        print("Pasta ordered")
+        print("pasta = ", pasta)
+    elif category == 'Sub':
+        size = request.POST["firstdiv"]
+        sub = request.POST["seconddiv"]
+        extras = request.getlist('thirddiv')   
+        print("Sub ordered")
+        print("size = ", size)
+        print("sub = ", sub)
+        print("extras = ", extras)
+    elif category == 'Salad':
+        salad = request.POST["firstdiv"]      
+        print("Salad ordered")
+        print("salad = ", salad)  
+    else:
+        size = request.POST["firstdiv"]
+        pizzatype = request.POST["seconddiv"]
+        toppings = request.POST["thirddiv"]
+        print("Pizza ordered")
+        print("size = ", size)
+        print("pizzatype = ", pizzatype)
+        print("toppings = ", request.POST["thirddiv"])
+    
     print(request.POST)
     return render(request, "orders/register.html", {"message": None})
