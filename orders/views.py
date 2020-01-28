@@ -65,10 +65,10 @@ def addtocart(request):
         order = Order(user=request.user)
         print(order)
         order.save()
-    
+    category = Category.objects.filter(name__exact=request.POST["categoryName"]).first()
+        
     #category = request.POST["categoryName"]
     if request.POST["categoryName"] == 'Pizza':
-        category = Category.objects.filter(name__exact=request.POST["categoryName"]).first()
         size = Size.objects.filter(name__exact=request.POST["firstdiv"]).first()
         pizzatype = Pizzatype.objects.filter(name__exact=request.POST["seconddiv"]).first()
         toppings = request.POST.getlist('thirddiv')
@@ -85,8 +85,14 @@ def addtocart(request):
         print("pizzatype = ", pizzatype)
         #print("toppings = ", toppings)
         
-    elif category == 'Pasta':
+    elif request.POST["categoryName"] == 'Pasta':
         pasta = request.POST["firstdiv"]
+        pastaprices = Pastaprice.objects.all()
+        for pastaprice in pastaprices:
+            if str(pastaprice) == pasta:
+                bastapasta = pastaprice.price
+        pasta = Pasta(category=category, order=order, )
+        print(bastapasta)
         print("Pasta ordered")
         print("pasta = ", pasta)
     elif category == 'Sub':
